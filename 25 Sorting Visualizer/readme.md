@@ -12,10 +12,13 @@ This is a Sorting Visualizer program written in C++ that demonstrates various so
 
 Here's a preview of the sorting visualizer in action:
 
-![Sorting Visualizer Demo](images/sorting-demo.png)
+![Sorting Visualizer Demo](images/Sorting2.png)
 
 ## Screenshot:
-![Sorting Demo](sorting-demo.png)
+![Sorting Demo](images/Menu1.png)
+![Sorting Demo](images/Menu2.png)
+![Sorting Demo](images/Menu3.png)
+![Sorting Demo](images/Sorting1.png)
 
 ## How It Works:
 
