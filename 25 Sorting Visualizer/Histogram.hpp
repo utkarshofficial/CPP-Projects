@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <algorithm>
 #include <windows.h>
+#include <thread>
 
 using namespace std;
 
@@ -52,9 +53,10 @@ void Histogram::getMax() {
 }
 
 void Histogram::showHisto(int ii = -1, int currentCompare = -1, int currentElement = -1) {
-    // Reset the cursor position and hide the cursor
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), {0, 0});
-    ShowConsoleCursor(false);
+    // ANSI escape code for clearing the screen
+    std::cout << "\033[?25l";
+    std::cout << "\033[H"; // move cursor to (1,1)
+    std::cout.flush();
 
     char b = 219;  // 219 = █ character
 
@@ -62,32 +64,35 @@ void Histogram::showHisto(int ii = -1, int currentCompare = -1, int currentEleme
         for (int j = 0; j < nums.size(); j++) {
             // Color the bars based on the comparison state
             if (j == currentElement) {
-                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);  // green text
+                std::cout << "\033[32m";  // Green text (for current element)
             } else if (j == currentCompare) {
-                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);  // red text
+                std::cout << "\033[31m";  // Red text (for current compare)
             } else if (ii == j || nums[j] != oldNums[j]) {
-                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);  // red text
+                std::cout << "\033[31m";  // Red text (for elements that changed)
             } else {
-                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);  // white text
+                std::cout << "\033[37m";  // White text (default)
             }
 
             if (maxNum - nums[j] <= i)
-                cout << " " << b << b << " ";
+                std::cout << " " << b << b << " ";
             else
-                cout << "    ";
+                std::cout << "    ";
         }
-        cout << endl;
+        std::cout << std::endl;
     }
 
     applyDelay();
 
+    // Reset to normal text color
+    std::cout << "\033[0m";  // Reset color
+
     // Print the actual array values at the bottom
     for (int i = 0; i < nums.size(); i++) {
         if (oldNums[i] != nums[i])
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 16);  // light gray
-        cout << " " << left << setw(2) << setfill(' ') << nums[i] << " ";
+            std::cout << "\033[48;5;117m\033[97m";  // sky back white text
+        std::cout << " " << std::left << std::setw(2) << std::setfill(' ') << nums[i] << " ";
         oldNums[i] = nums[i];
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);  // reset to white
+        std::cout << "\033[0m";  // Reset color
     }
 }
 
@@ -105,5 +110,6 @@ void Histogram::updateOldNums() {
 
 void Histogram::applyDelay() {
     // Apply delay in milliseconds
-    Sleep(delay);
+    // Sleep(delay);
+    this_thread::sleep_for(chrono::milliseconds(delay));
 }

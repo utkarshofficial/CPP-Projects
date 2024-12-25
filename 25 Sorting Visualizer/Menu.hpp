@@ -124,6 +124,7 @@ private:
 public:
     void showMainMenu() {
         system("cls");
+        std::cout << "\033[?25h";
         
         while (true) {
             system("cls");
